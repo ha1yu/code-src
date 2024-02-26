@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -48,27 +50,33 @@ public class Traversal {
         }
     }
 
-    @ApiOperation(value = "vul：任意路径遍历")
-    @GetMapping("/list")
-    public String fileList(String filename) {
+    @ApiOperation(value = "vul：过滤../")
+    @GetMapping("/download2")
+    public String download2(String filename, HttpServletResponse response) {
+        // 下载的文件路径
         String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-        log.info("[vul] 任意路径遍历：" + filePath);
-        StringBuilder sb = new StringBuilder();
+        log.info("[vul] 任意文件下载：" + filePath);
 
-        File f = new File(filePath);
-        File[] fs = f.listFiles();
+        //替换../
+        filePath = filePath.replace("../","").replace("..\\","");
 
-        if (fs != null) {
-            for (File ff : fs) {
-                sb.append(ff.getName()).append("<br>");
-            }
-            return sb.toString();
+        try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(filePath)))) {
+            response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+            response.setContentLength((int) Files.size(Paths.get(filePath)));
+            response.setContentType("application/octet-stream");
+
+            // 使用 Apache Commons IO 库的工具方法将输入流中的数据拷贝到输出流中
+            IOUtils.copy(inputStream, response.getOutputStream());
+            log.info("文件 {} 下载成功，路径：{}", filename, filePath);
+            return "下载文件成功：" + filePath;
+        } catch (IOException e) {
+            log.error("下载文件失败，路径：{}", filePath, e);
+            return "未找到文件：" + filePath;
         }
-        return filePath + "目录不存在！";
     }
 
 
-    @ApiOperation(value = "safe：过滤../")
+    /*@ApiOperation(value = "safe：过滤../")
     @GetMapping("/download/safe")
     public String safe(String filename) {
         if (!Security.checkTraversal(filename)) {
@@ -77,6 +85,30 @@ public class Traversal {
         } else {
             return "检测到非法遍历！";
         }
+    }*/
+
+    @GetMapping("/download/safe")
+    public String safe(String filename) throws Exception {
+        String filePath = System.getProperty("user.dir") + "/logs/" + filename;
+        if (checkFile(filePath)) {
+            return "安全路径：" + filePath;
+        } else {
+            return "检测到非法遍历！";
+        }
+    }
+    public boolean checkFile(String path) throws Exception {
+        //处理截断问题
+        path = path.replaceAll("\\p{C}", "");
+        if(path.contains("..")){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkExt(String path){
+        String ext = path.substring(path.lastIndexOf("."), path.length());
+        List<String> exts = Arrays.asList(".jpg", ".png", ".jpeg", ".gif");
+        return exts.contains(ext);
     }
 }
 
