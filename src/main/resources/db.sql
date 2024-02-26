@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS test default charset utf8 COLLATE utf8_general_ci;
-use tests;
+use test;
 
 -- SQL注入使用的数据
 CREATE TABLE `users`
