@@ -72,7 +72,7 @@
                     <i class="lnr lnr-code"></i><span>SQL注入</span><i
                         class="icon-submenu lnr lnr-chevron-left"></i></a>
                 <div id="sql_submenu"
-                     th:class="${((active=='sqli_jdbc.html') || (active=='sqli_mybatis.html')) ? 'collapsed':'collapse'}">
+                     th:class="${((active=='sqli_jdbc.html') || (active=='sqli_mybatis.html') || (active=='sqli_mybatis_plus.html') || (active=='sqli_tkMapper.html')) ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li>
                             <a th:class="${active=='sqli_jdbc.html' ? 'nav-link active':'nav-link'}"
@@ -83,6 +83,16 @@
                             <a th:class="${active=='sqli_mybatis.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/sqli/mybatis}">
                                 <i class="lnr lnr-bug"></i><span>MyBatis</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='sqli_mybatis_plus.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/sqli/mybatis_plus}">
+                                <i class="lnr lnr-bug"></i><span>MyBatis-Plus</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='sqli_tkMapper.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/sqli/tkMapper}">
+                                <i class="lnr lnr-bug"></i><span>tkMapper</span></a>
                         </li>
                     </ul>
                 </div>
@@ -356,6 +366,13 @@
         createEditor("code5");
         createEditor("code6");
         createEditor("code7");
+        createEditor("code8");
+        createEditor("code9");
+        createEditor("code10");
+        createEditor("code11");
+        createEditor("code12");
+        createEditor("code13");
+        createEditor("code14");
     </script>
 </div>
 
