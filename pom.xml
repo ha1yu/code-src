@@ -23,6 +23,15 @@
 
     <!-- 仓库搜索 https://mvnrepository.com -->
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper -->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>

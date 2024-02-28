@@ -31,7 +31,8 @@
         <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
           SQLI(SQL Injection)，
           SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
-          tkMapper是一个自动生产SQL语句的java组件
+            tkMapper是一个MyBatis插件，是在MyBatis的基础上提供的开发工具。tkMapper提供了代码生成器、对象关系映射、Example等多种功能，其中可能存在SQL注入的地方主要是在Example中。
+            Example提供了多种用于构造查询条件的方法，SQL注入风险也主要产生于这些方法中。
         </div>
         <div class="tab-pane fade" id="bb">
                     <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
@@ -56,7 +57,7 @@
               <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
             </svg>
             <span class="align-middle"> Run</span></a>
-          <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(Statement)</span></h5>
+          <h5><span class="lnr lnr-bug"> 漏洞代码 - andCondition 错误使用</span></h5>
 
           <label for="code1"></label><textarea class="form-control" id="code1">
 // 采用Statement方法拼接SQL语句，导致注入产生
