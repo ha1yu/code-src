@@ -51,7 +51,7 @@
       <div class="box-float">
         <div class="float1">
           <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-             href="/SQLI/JDBC/vul1?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">
+             href="/SQLI/tkMapper/vul/andCondition?user=mechoy">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                  viewBox="0 0 16 16">
               <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -60,17 +60,16 @@
           <h5><span class="lnr lnr-bug"> 漏洞代码 - andCondition 错误使用</span></h5>
 
           <label for="code1"></label><textarea class="form-control" id="code1">
-// 采用Statement方法拼接SQL语句，导致注入产生
+// andCondition(String condition)
+// andCondition(String condition, Object value)
+// andCondition采用了字符串拼接的形式，当使用不正确时会造成SQL注入风险
 
-public String vul1(String id) {
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
-
-    Statement stmt = conn.createStatement();
-    // 拼接语句产生SQL注入
-    String sql = "select * from users where id = '" + id + "'";
-    ResultSet rs = stmt.executeQuery(sql);
-    ...
+@GetMapping("/vul/andCondition")
+public List<Users> queryApply(@RequestParam("user") String user) {
+    Example example = new Example(Users.class);
+    Example.Criteria criteria = example.createCriteria();
+    criteria.andCondition("user=" + "'" + user + "'");
+    return tkUserMapper.selectByExample(example);
 }
 
                     </textarea><br><br>
@@ -123,7 +122,7 @@ public Map<String, Object> vul3(String id) {
 
         <div class="float2">
           <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-             href="/SQLI/JDBC/safe2?id=1'">
+             href="/SQLI/tkMapper/safe/andCondition?user=mechoy">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                  viewBox="0 0 16 16">
               <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -131,16 +130,14 @@ public Map<String, Object> vul3(String id) {
             <span class="align-middle"> Run</span></a>
           <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
           <label for="code4"></label><textarea class="form-control" id="code4">
-// 采用黑名单过滤危险字符，同时也容易误伤（次方案）
+// andCondition(String condition, Object value)采用了预处理的方式传参，故此时是安全的
 
-public static boolean checkSql(String content) {
-    String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "*", "(", ")", "and", "or", "exec", "insert", "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare"};
-    for (String s : black_list) {
-        if (content.toLowerCase().contains(s)) {
-            return true;
-        }
-    }
-    return false;
+@GetMapping("/Safe/andCondition")
+public List<Users> queryAndConditionSafe(@RequestParam("user") String user) {
+    Example example = new Example(Users.class);
+    Example.Criteria criteria = example.createCriteria();
+    criteria.andCondition("user=", user);
+    return tkUserMapper.selectByExample(example);
 }
                     </textarea><br><br>
 
