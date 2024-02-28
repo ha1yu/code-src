@@ -32,13 +32,15 @@ public class SSRF {
 
     /**
      * @poc http://127.0.0.1:8888/SSRF/URLConnection/vul?url=http://www.baidu.com
-     * @poc http://127.0.0.1:8888/SSRF/URLConnection/vul?url=file:///etc/passwd
+     * @poc http://127.0.0.1:8888/SSRF/URLConnection/vul?url=file:////C:/Windows/win.ini
      */
     @ApiOperation(value = "vul：HTTPURLConnection类")
     @GetMapping("/URLConnection/vul")
     public String URLConnection(String url) {
         log.info("[vul] SSRF：" + url);
-        return HttpClientUtils.URLConnection(url);
+        String rep = "<h2>" + url + "</h2>";
+        rep = rep + HttpClientUtils.URLConnection(url);
+        return rep;
     }
 
 

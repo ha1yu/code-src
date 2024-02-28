@@ -49,7 +49,7 @@
                 <div class="float1">
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection/vul?url=file:///etc/passwd}">
+                       th:href="@{/SSRF/URLConnection/vul?url=file:////C:/Windows/win.ini}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -81,7 +81,7 @@ public static String URLConnection(String url) {
 
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection/vul2?url=http://168302434}">
+                       th:href="@{/SSRF/URLConnection/vul2?url=http://3541441820}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -89,7 +89,8 @@ public static String URLConnection(String url) {
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 绕过</span></h5>
                     <label for="code2"></label><textarea class="form-control" id="code2">
-// SSRF修复经常碰到的问题，虽然过滤了内网地址，但通过短链接跳转、IP进制的方式可以绕过
+// SSRF修复经常碰到的问题，虽然过滤了内网地址，
+// 但通过短链接跳转、IP转为8、10、16进制的方式可以绕过
 
 public String URLConnection2(String url) {
     if (!Security.isHttp(url)) {
