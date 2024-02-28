@@ -4,20 +4,20 @@
 <!-- namespace:改mapper.xml映射文件的唯一标识并且必须和数据处理层的接口的路径相同 -->
 <mapper namespace="com.best.hello.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="com.best.hello.entity.User">
+    <resultMap id="BaseResultMap" type="com.best.hello.entity.Users">
         <id column="id" property="id" javaType="java.lang.Integer"/>
         <id column="user" property="username" javaType="String"/>
         <id column="pass" property="password" javaType="String"/>
     </resultMap>
 
     <!-- id的值必须和数据处理层的接口名一致 -->
-    <select id="orderBy" resultType="com.best.hello.entity.User">
+    <select id="orderBy" resultType="com.best.hello.entity.Users">
         select *
         from users
         order by ${field} ${sort}
     </select>
 
-    <select id="orderBySafe" resultType="com.best.hello.entity.User">
+    <select id="orderBySafe" resultType="com.best.hello.entity.Users">
         select * from users
         <choose>
             <when test="field == 'id'">

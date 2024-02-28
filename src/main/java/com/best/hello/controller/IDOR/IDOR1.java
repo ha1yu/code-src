@@ -1,7 +1,7 @@
 package com.best.hello.controller.IDOR;
 
 import com.alibaba.fastjson.JSON;
-import com.best.hello.entity.User;
+import com.best.hello.entity.Users;
 import com.best.hello.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,13 +28,13 @@ public class IDOR1 {
     // http://127.0.0.1:8888/IDOR/vul/info?name=admin
     @ApiOperation(value = "vul：根据name查询用户信息")
     @GetMapping("/vul/info")
-    public List<User> vul(String name) {
+    public List<Users> vul(String name) {
         log.info("[vul] 水平越权查询：" + name);
         return userMapper.queryByUser(name);
     }
 
     @GetMapping(value = "/vul/qid")
-    public List<User> vul(Integer id) {
+    public List<Users> vul(Integer id) {
         log.info("[vul] 水平id越权查询：" + id);
         return userMapper.queryById2(id);
     }

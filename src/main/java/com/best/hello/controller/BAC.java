@@ -1,8 +1,7 @@
 package com.best.hello.controller;
 
-import com.best.hello.entity.User;
+import com.best.hello.entity.Users;
 import com.best.hello.mapper.UserMapper;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class BAC {
 
     @ApiOperation(value = "vul：根据name查询用户信息")
     @GetMapping("/vul/info")
-    public List<User> vul(String name) {
+    public List<Users> vul(String name) {
         log.info("[vul] 水平越权查询：" + name);
         return userMapper.queryByUser(name);
     }
