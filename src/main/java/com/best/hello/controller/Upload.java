@@ -34,11 +34,6 @@ public class Upload {
     @PostMapping("/uploadVul")
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) throws IOException {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "请选择要上传的文件");
-            return "redirect:upload";
-        }
-
         File dir = new File(UPLOADED_FOLDER);
         if (!dir.exists()) {
             dir.mkdir();
@@ -55,10 +50,6 @@ public class Upload {
     @PostMapping("/uploadVul2")
     public String singleFileUpload2(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) throws IOException {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "请选择要上传的文件");
-            return "redirect:upload";
-        }
 
         //白名单校验
         String[] extsList = new String[]{".jpg", ".png", ".doc", ".docx"};
@@ -90,11 +81,6 @@ public class Upload {
     @PostMapping("/uploadVul3")
     public String singleFileUpload3(@RequestParam("file") MultipartFile file,
                                     RedirectAttributes redirectAttributes) throws IOException {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "请选择要上传的文件");
-            return "redirect:upload";
-        }
-
         //白名单校验
         String[] extsList = new String[]{"jpg", "png", "doc", "docx"};
         // 获取文件后缀
@@ -171,10 +157,6 @@ public class Upload {
     @PostMapping("/uploadSafe")
     public String singleFileUploadSafe(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) throws IOException {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "请选择要上传的文件");
-            return "redirect:upload";
-        }
 
         String filePath = UPLOADED_FOLDER + file.getOriginalFilename();
         if(!checkFile(filePath)){
