@@ -62,7 +62,7 @@ public List<User> orderBy(String field, String sort) {
 }
 
 // xml方式
-<select id="orderBy" resultType="com.best.hello.entity.User">
+<select id="orderBy" resultType="com.best.hello.entity.Users">
     select * from users order by ${field} ${sort}
 </select>
 
@@ -104,7 +104,7 @@ List<User> search(String q);
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 排序映射</span></h5>
                     <label for="code3"></label><textarea class="form-control" id="code3">
-<select id="orderBySafe" resultType="com.best.hello.entity.User">
+<select id="orderBySafe" resultType="com.best.hello.entity.Users">
     select * from users
     <choose>
         <when test="field == 'id'">

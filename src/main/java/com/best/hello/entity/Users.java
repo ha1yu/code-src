@@ -1,11 +1,14 @@
 package com.best.hello.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 /**
  * entity 实体类代码
  * @date 2021/07/23
  */
 
-public class User {
+@TableName("`users`")
+public class Users {
 
     private Integer id;
     private String user;

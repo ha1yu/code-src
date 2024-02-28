@@ -63,20 +63,87 @@
                     <textarea class="form-control" id="code1">
 // 允许上传任意文件导致的安全风险
 
-public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-    try {
-        byte[] bytes = file.getBytes();
-        Path dir = Paths.get(UPLOADED_FOLDER);
-        Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-
-        Files.write(path, bytes);
-        redirectAttributes.addFlashAttribute("message","上传文件成功：" + path + "");
-    } catch (Exception e) {
-         return e.toString();
+public String singleFileUpload(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) throws IOException {
+    File dir = new File(UPLOADED_FOLDER);
+    if (!dir.exists()) {
+        dir.mkdir();
     }
-    return "redirect:upload_status";
+
+    File filePath = new File(UPLOADED_FOLDER + file.getOriginalFilename());
+    log.info("[vul] 上传文件：" + filePath.getPath());
+    file.transferTo(filePath);
+
+    return "文件上传路径: " + filePath.getPath();
 }
-                    </textarea>
+</textarea><br><br>
+
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 使用indexOf导致绕过</span></h5><br>
+                    <form method="POST" th:action="@{/UPLOAD/uploadVul2}" enctype="multipart/form-data">
+                        <input type="file" name="file"/>
+                        <input type="submit" class="btn btn-sm btn-danger" value="上传"/>
+                    </form>
+                    <br>
+
+                    <textarea class="form-control" id="code3">
+// indexOf截取文件后缀容易出现安全问题
+
+public String singleFileUpload2(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) throws IOException {
+    //白名单校验
+    String[] extsList = new String[]{".jpg", ".png", ".doc", ".docx"};
+    // 获取文件后缀
+    String fileName = file.getOriginalFilename();
+    String ext = fileName.substring(fileName.indexOf("."));
+    boolean flag = true;
+    for (String str : extsList) {
+        if (ext.contains(str)) {
+            flag = false;
+        }
+    }
+    if(flag){return "文件名非法！";}
+
+    File dir = new File(UPLOADED_FOLDER);
+    if (!dir.exists()) {
+        dir.mkdir();
+    }
+
+    File filePath = new File(UPLOADED_FOLDER + fileName);
+    log.info("[vul] 上传文件：" + filePath.getPath());
+    file.transferTo(filePath);
+
+    return "文件上传路径: " + filePath.getPath();
+}
+</textarea><br><br>
+
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - Windows特性绕过</span></h5><br>
+                    <form method="POST" th:action="@{/UPLOAD/uploadVul3}" enctype="multipart/form-data">
+                        <input type="file" name="file"/>
+                        <input type="submit" class="btn btn-sm btn-danger" value="上传"/>
+                    </form>
+                    <br>
+
+                    <textarea class="form-control" id="code4">
+// 由于文件系统特性，Windows中会将文件名中结尾的 ”.” 删除，linux不会
+
+public String singleFileUpload3(@RequestParam("file") MultipartFile file,
+                                    RedirectAttributes redirectAttributes) throws IOException {
+    //白名单校验
+    String[] extsList = new String[]{".jpg", ".png", ".doc", ".docx"};
+    // 获取文件后缀
+    String fileName = file.getOriginalFilename();
+    String ext = fileName.substring(fileName.lastIndexOf("."));
+    // 判断后缀是否为空，如果为空则不校验白名单
+    if (!ext.isEmpty() && !Arrays.asList(extsList).contains(ext)) {
+        return ("上传文件非法！");
+    }
+
+    File filePath = new File(UPLOADED_FOLDER + fileName);
+    log.info("[vul] 上传文件：" + filePath.getPath());
+    file.transferTo(filePath);
+    ......
+}
+</textarea>
                 </div>
 
                 <div class="float2">
@@ -87,32 +154,29 @@ public String singleFileUpload(@RequestParam("file") MultipartFile file, Redirec
                     </form>
                     <br>
                     <textarea class="form-control" id="code2">
-// 对上传文件后缀名做白名单处理
+// 处理截取问题，对上传文件后缀名做白名单处理
 
 public String singleFileUploadSafe(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
-    try {
-        byte[] bytes = file.getBytes();
-        String fileName = file.getOriginalFilename();
-        Path dir = Paths.get(UPLOADED_FOLDER);
-        Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                                   RedirectAttributes redirectAttributes) throws IOException {
+    String filePath = UPLOADED_FOLDER + file.getOriginalFilename();
+    if(!checkFile(filePath)){
+        return "上传文件非法！";
+    }
+    ......
+    return "文件上传成功！";
+}
 
-        // 获取文件后缀名
-        String Suffix = fileName.substring(fileName.lastIndexOf("."));
-
-        String[] SuffixSafe = {".jpg", ".png", ".jpeg", ".gif", ".bmp", ".ico"};
-        boolean flag = false;
-
-        for (String s : SuffixSafe) {
-            if (Suffix.toLowerCase().equals(s)) {
-                flag = true;
-                break;
-            }
-        }
-
-        if (!flag) {
-            return "只允许上传图片，[.jpg, .png, .jpeg, .gif, .bmp, .ico]";
-        }
+public boolean checkFile(String file){
+    //处理截断问题
+    file = file.replaceAll("\\p{C}", "");
+    if(file.contains("..")){
+        return false;
+    }
+    //文件后缀白名单校验
+    String ext = file.substring(file.lastIndexOf("."),file.length());
+    List<String> exts = Arrays.asList(".jpg", ".png", ".jpeg", ".gif");
+    return exts.contains(ext);
+}
                     </textarea>
                 </div>
             </div>
