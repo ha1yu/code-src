@@ -90,7 +90,7 @@ public static String URLConnection(String url) {
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 绕过</span></h5>
                     <label for="code2"></label><textarea class="form-control" id="code2">
 // SSRF修复经常碰到的问题，虽然过滤了内网地址，
-// 但通过短链接跳转、IP转为8、10、16进制的方式可以绕过
+// 但通过短链接跳转方式可以绕过
 
 public String URLConnection2(String url) {
     if (!Security.isHttp(url)) {
@@ -100,6 +100,23 @@ public String URLConnection2(String url) {
     } else {
         return HttpClientUtils.URLConnection(url);
     }
+}
+                    </textarea><br><br>
+
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/SSRF/URLConnection/vul3?path=@www.baidu.com}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - @绕过</span></h5>
+                    <label for="code3"></label><textarea class="form-control" id="code3">
+// 在解析url时，@前的部分被当作账号密码处理
+
+public String URLConnection4(String path) {
+    String url = "http://11.11.11.11" + path;
+    return HttpClientUtils.URLConnection(url);
 }
                     </textarea>
                 </div>
@@ -126,7 +143,8 @@ public String URLConnection3(String url) {
         return HttpClientUtil.URLConnection(url);
     }
 }
-                    </textarea><br><br>
+                    </textarea>
+                    <!--<br><br>
 
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
@@ -192,7 +210,7 @@ public static boolean isIntranet(String url) {
 HttpURLConnection conn = (HttpURLConnection) u.openConnection();
 conn.setInstanceFollowRedirects(false); // 不允许重定向或者对重定向后的地址做二次判断
 conn.connect();
-                    </textarea>
+                    </textarea>-->
                 </div>
 
             </div>

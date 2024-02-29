@@ -60,6 +60,13 @@ public class SSRF {
         }
     }
 
+    @ApiOperation(value = "vul：@绕过")
+    @GetMapping("/URLConnection/vul3")
+    public String URLConnection4(String path) {
+        String url = "http://11.11.11.11" + path;
+        return HttpClientUtils.URLConnection(url);
+    }
+
 
     @ApiOperation(value = "safe：白名单方式")
     @GetMapping("/URLConnection/safe")
