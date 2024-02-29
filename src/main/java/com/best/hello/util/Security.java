@@ -108,7 +108,8 @@ public class Security {
      * SQL注入检测
      */
     public static boolean checkSql(String content) {
-        String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "<", "*", "(", ")", "and", "or", "exec", "insert", "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare"};
+        String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "<", "*", "(", ")", "and", "or", "exec", "insert",
+                "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare"};
         for (String s : black_list) {
             if (content.toLowerCase().contains(s)) {
                 return true;
