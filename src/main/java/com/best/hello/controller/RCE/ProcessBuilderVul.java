@@ -19,9 +19,9 @@ public class ProcessBuilderVul {
      */
     @ApiOperation(value = "vul：命令执行 - ProcessBuilder", notes = "调用ProcessBuilder执行ls命令，接收参数filepath，拼接命令语句")
     @RequestMapping("/vul")
-    public static String processbuilderVul(String filepath) throws IOException {
+    public static String processbuilderVul(String ip) throws IOException {
 
-        String[] cmdList = {"sh", "-c", "ls -l " + filepath};
+        String[] cmdList = {"cmd", "/C", "ping " + ip};
 
         ProcessBuilder pb = new ProcessBuilder(cmdList);
         pb.redirectErrorStream(true);
@@ -45,11 +45,11 @@ public class ProcessBuilderVul {
      */
     @ApiOperation(value = "safe: 过滤特殊字符")
     @RequestMapping("/safe")
-    public static String processbuilderSafe(String filepath) throws IOException {
+    public static String processbuilderSafe(String ip) throws IOException {
 
-        if (!Security.checkOs(filepath)) {
+        if (!Security.checkOs(ip)) {
 
-            String[] cmdList = {"sh", "-c", "ls -l " + filepath};
+            String[] cmdList = {"cmd", "/C", "ping " + ip};
 
             ProcessBuilder pb = new ProcessBuilder(cmdList);
             pb.redirectErrorStream(true);

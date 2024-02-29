@@ -51,7 +51,7 @@
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">
+                       th:href="@{/RCE/ProcessBuilder/vul?ip=aaa%7C%7Cwhoami}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -63,8 +63,8 @@
 // new ProcessBuilder(command).start()
 // 功能是利用ProcessBuilder执行ls命令查看文件，但攻击者通过拼接; & |等连接符来执行自己的命令。
 
-public static String processbuilderVul(String filepath) throws IOException {
-    String[] cmdList = {"sh", "-c", "ls -l " + filepath};
+public static String processbuilderVul(String ip) throws IOException {
+    String[] cmdList = {"cmd", "/C", "ping " + ip};
     ProcessBuilder pb = new ProcessBuilder(cmdList);
     pb.redirectErrorStream(true);
     Process process = pb.start();
@@ -174,7 +174,7 @@ public void groovy(String cmd) {
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       th:href="@{/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">
+                       th:href="@{/RCE/ProcessBuilder/safe?ip=aaa%7C%7Cwhoami}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>

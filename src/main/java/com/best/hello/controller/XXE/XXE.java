@@ -110,8 +110,8 @@ public class XXE {
             SAXReader sax = new SAXReader();
             // 修复：禁用外部实体
             // sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            sax.read(new InputSource(new StringReader(content)));
-            return "SAXReader XXE";
+            org.dom4j.Document read = sax.read(new InputSource(new StringReader(content)));
+            return read.getRootElement().getStringValue();
         } catch (Exception e) {
             return e.toString();
         }
@@ -142,6 +142,8 @@ public class XXE {
         try {
             // DocumentBuilderFactory是用于创建DOM模式的解析器对象,newInstance方法会根据本地平台默认安装的解析器，自动创建一个工厂的对象并返回。
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            // 修复: 禁用外部实体
+            // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             StringReader sr = new StringReader(content);

