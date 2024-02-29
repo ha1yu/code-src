@@ -47,7 +47,7 @@
             <div class="box-float">
                 <div class="float1">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/apply?user=1')and+updatexml(1,concat(0x7e,database(),0x7e),1)--+">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -61,18 +61,17 @@
 // apply(boolean condition, String applySql, Object... params)
 // 该方法可用于数据库函数 动态入参的params对应前面applySql内部的{index}部分.这样是不会有sql注入风险的,反之会有!
 
-@RequestMapping("/applyvuln")
-public Tutorial mybatisapplyvuln(String author,String title) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
-    wrapper.eq("author",author).apply("title="+title);
-    Tutorial tutorial = tutorialMapper.selectOne(wrapper);
-    return tutorial;
-}
+@GetMapping("/vul/apply")
+    public List<Users> queryApply(@RequestParam("name") String name) {
+        QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+        wrapper.apply("name = '" + name + "'");
+        return userMapper.selectList(wrapper);
+    }
 
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/last?column=updatexml(1,if(1=2,1,concat(0x7e,@@version,0x7e)),1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -94,17 +93,16 @@ public Tutorial mybatisapplyvuln(String author,String title) {
 // 说明：无视优化规则直接拼接到 sql 的最后
 // 只能调用一次,多次调用以最后一次为准 ，若相关内容用户可控，则存在sql注入风险
 
-@RequestMapping("/lastvuln")
-public List<Tutorial> mybatislastvuln(String column) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
+@GetMapping("/vul/last")
+public List<Users> queryLast(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
     wrapper.last("order by " + column);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/exists?user=xxx')or+updatexml(1,concat(0x7e,user(),0x7e),1))--+">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -120,18 +118,17 @@ public List<Tutorial> mybatislastvuln(String column) {
 // 拼接EXISTX / NOT EXISTS ( sql语句 )
 // 若existsSql或notExistsSql中有关内容用户可控，则存在sql注入风险
 
-@RequestMapping("/existsvuln")
-public List<Tutorial> mybatisexistsvuln(String title) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
-    wrapper.exists("select title from tutorials where title = " + title);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+@GetMapping("/vul/exists")
+public List<Users> queryExists(@RequestParam("user") String user) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.exists("select user from users where user = " + user);
+    return userMapper.selectList(wrapper);
 }
 
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/having?id=updatexml(1,concat(0x7e,user(),0x7e),1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -143,20 +140,19 @@ public List<Tutorial> mybatisexistsvuln(String title) {
 // having(String sqlHaving, Object... params)
 // having(boolean condition, String sqlHaving, Object... params)
 // HAVING ( sql语句 ),用于Having查询，一般用配合groupby在对分组统计函数进行过滤的场景中
-// 与apply一样，动态入参的params对应前面applySql内部的{index}部分，可以进行预编译防止SQL注入问题
 
-@RequestMapping("/havingvuln")
-public List<Tutorial> mybatishavingvuln(String id) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
-    wrapper.select().groupBy("author").having("id > " +id);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+@ApiOperation(value = "vul：Mybatis-Plus使用having")
+@GetMapping("/vul/having")
+public List<Users> queryHaving(@RequestParam("id") String id) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.select().groupBy("id").having("id>"+id);
+    return userMapper.selectList(wrapper);
 }
 
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/orderBy?column=updatexml(1,concat(0x7e,@@version,0x7e),1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -173,34 +169,31 @@ public List<Tutorial> mybatishavingvuln(String id) {
 // 排序：ORDER BY 字段, (ASC/DESC)
 // Order by排序时不能进行预编译处理,故相关内容用户可控的话会存在sql注入风险。
 
-@RequestMapping("/orderbyvuln")
-public List<Tutorial> mybatishorderbyvuln(String column) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
-    wrapper.select().orderBy(true, true, column);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+@GetMapping("/vul/orderBy")
+public List<Users> queryOrderBy(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.select().orderBy(true,true,column);
+    return userMapper.selectList(wrapper);
 }
 
-@RequestMapping("/orderbyAscvuln")
-public List<Tutorial> mybatishorderbyAscvuln(String column) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
+@GetMapping("/vul/orderBy")
+public List<Users> queryOrderBy(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
     wrapper.select().orderByAsc(column);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+    return userMapper.selectList(wrapper);
 }
 
-@RequestMapping("/orderbyDescvuln")
-public List<Tutorial> mybatishorderbyDescvuln(String column) {
+@GetMapping("/vul/orderBy")
+public List<Users> queryOrderBy(@RequestParam("column") String column) {
     QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
     wrapper.select().orderByDesc(column);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+    return userMapper.selectList(wrapper);
 }
 
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/groupBy?column=updatexml(1,concat(0x7e,@@version,0x7e),1)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -212,20 +205,19 @@ public List<Tutorial> mybatishorderbyDescvuln(String column) {
 // groupBy(R... columns)
 // groupBy(boolean condition, R... columns)
 // 分组：GROUP BY 字段, ... 主要用于用于结合聚合函数，根据一个或多个列对结果集进行分组
-//
+// groupBy之后不能使用预处理，所以当groupBy传入内容可控时，就可能会存在SQL注入
 
-@RequestMapping("/gropbycvuln")
-public List<Tutorial> mybatishsgropbycvuln(String column) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
+@GetMapping("/vul/groupBy")
+public List<Users> queryGroupBy(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
     wrapper.select().groupBy(column);
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+    return userMapper.selectList(wrapper);
 }
 
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                       href="/SQLI/MyBatisPlus/vul/insql?column=1+and+updatexml(1,concat(0x7e,user(),0x7e),1))--+&id=2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -255,7 +247,7 @@ public List<Tutorial> mybatisinsqlvuln(String column,String id) {
 
                 <div class="float2">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/order?field=id">
+                       href="/SQLI/MyBatisPlus/safe/apply?user=1')and+updatexml(1,concat(0x7e,database(),0x7e),1)--+">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -265,17 +257,16 @@ public List<Tutorial> mybatisinsqlvuln(String column,String id) {
                     <label for="code3"></label><textarea class="form-control" id="code3">
 // 使用{index}params进行预编译处理,不存在sql注入
 
-@RequestMapping("/applysec")
-public Tutorial mybatisapplysec(String author,String title) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
-    wrapper.eq("author",author).apply("title={0}",title);
-    Tutorial tutorial = tutorialMapper.selectOne(wrapper);
-    return tutorial;
+@GetMapping("/safe/apply")
+public List<Users> queryApplySafe(@RequestParam("user") String user) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.apply("user={0}",user);
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/id/1">
+                       href="/SQLI/MyBatisPlus/safe/last?column=id">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -285,141 +276,140 @@ public Tutorial mybatisapplysec(String author,String title) {
                     <label for="code4"></label><textarea class="form-control" id="code4">
 // 在使用last时，应保证last中内容用户不可控，由服务端控制
 
-@RequestMapping("/lastSec")
-public List<Tutorial> mybatislastvuln(String column) {
-    QueryWrapper<Tutorial> wrapper = new QueryWrapper&lt;&gt;();
+@GetMapping("/safe/last")
+public List<Users> queryLastSafe(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
     if(column.equals("id")){
-       wrapper.last("order by " + column);
+        wrapper.last("order by " + column);
     }else{
-       wrapper.last("order by " + "name");
+        wrapper.last("order by " + "user");
     }
-    List<Tutorial> list = tutorialMapper.selectList(wrapper);
-    return list;
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
+                       href="/SQLI/MyBatisPlus/safe/exists?id=1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 中内容不可控</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 正确使用</span></h5>
                     <label for="code5"></label><textarea class="form-control" id="code5">
 // exists/notExists都是直接将内容拼接至SQL语句中
 // 所以防止SQL注入应保证exists/notExists中内容客户端不可控
 // 或者将传入的内容的类型固定为非字符串的形式
 
-@RequestMapping("/existsSec")
-@ResponseBody
-public void test(@RequestParam(name = "size", defaultValue = "0") Integer size){
-    //创建条件查询器
-    QueryWrapper<Users> userQueryWrapper = new QueryWrapper&lt;&gt;();
-    //添加条件查询
-    userQueryWrapper.last("limit " + size);
-    List<Users> users = userMapper.selectList(userQueryWrapper);
-    ...
+@GetMapping("/safe/exists")
+public List<Users> queryExistsSafe(@RequestParam("id") Integer id) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.exists("select user from users where id > " + id);
+    return userMapper.selectList(wrapper);
+}
+
+// 若必须拼接客户端传入，则需要对客户端的传入内容进行严格校验与过滤
+@GetMapping("/safe/exists")
+public List<Users> queryExistsSafe(@RequestParam("user") String user) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    user = checkSQLi(user);
+    wrapper.exists("select user from users where user = '" + user + "'");
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
+                       href="/SQLI/MyBatisPlus/safe/having?id=2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 中内容不可控</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - having 正确使用</span></h5>
                     <label for="code5"></label><textarea class="form-control" id="code11">
-// exists/notExists都是直接将内容拼接至SQL语句中
-// 所以防止SQL注入应保证exists/notExists中内容客户端不可控
-// 或者将传入的内容的类型固定为非字符串的形式
+// 与apply一样，动态入参的params对应前面applySql内部的{index}部分，可以进行预编译防止SQL注入问题
 
-@RequestMapping("/existsSec")
-@ResponseBody
-public void test(@RequestParam(name = "size", defaultValue = "0") Integer size){
-    //创建条件查询器
-    QueryWrapper<Users> userQueryWrapper = new QueryWrapper&lt;&gt;();
-    //添加条件查询
-    userQueryWrapper.last("limit " + size);
-    List<Users> users = userMapper.selectList(userQueryWrapper);
-    ...
+@GetMapping("/safe/having")
+public List<Users> queryHavingSafe(@RequestParam("id") String id) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    wrapper.select().groupBy("id").having("id>{0}", id);
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
+                       href="/SQLI/MyBatisPlus/safe/orderBy?column=user">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 中内容不可控</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - order by 正确使用</span></h5>
                     <label for="code5"></label><textarea class="form-control" id="code12">
-// exists/notExists都是直接将内容拼接至SQL语句中
-// 所以防止SQL注入应保证exists/notExists中内容客户端不可控
-// 或者将传入的内容的类型固定为非字符串的形式
+// orderBy之后必须是拼接的形式，无法使用预编译
+// 所以必须保证orderBy中的值客户端不可控
 
-@RequestMapping("/existsSec")
-@ResponseBody
-public void test(@RequestParam(name = "size", defaultValue = "0") Integer size){
-    //创建条件查询器
-    QueryWrapper<Users> userQueryWrapper = new QueryWrapper&lt;&gt;();
-    //添加条件查询
-    userQueryWrapper.last("limit " + size);
-    List<Users> users = userMapper.selectList(userQueryWrapper);
-    ...
+@GetMapping("/safe/orderBy")
+public List<Users> queryOrderBySafe(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    if (column.equals("user")){
+        wrapper.select().orderBy(true,true,"user");
+    } else if (column.equals("pass")) {
+        wrapper.select().orderBy(true,true,"pass");
+    }else {
+        wrapper.select().orderBy(true,true,"id");
+    }
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
+                       href="/SQLI/MyBatisPlus/safe/groupBy?column=user">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 中内容不可控</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - group by 正确使用</span></h5>
                     <label for="code5"></label><textarea class="form-control" id="code13">
-// exists/notExists都是直接将内容拼接至SQL语句中
-// 所以防止SQL注入应保证exists/notExists中内容客户端不可控
-// 或者将传入的内容的类型固定为非字符串的形式
+// group by之后必须是拼接的形式，无法使用预编译
+// 所以使用group by时必须保证传入值客户端不可控
 
-@RequestMapping("/existsSec")
-@ResponseBody
-public void test(@RequestParam(name = "size", defaultValue = "0") Integer size){
-    //创建条件查询器
-    QueryWrapper<Users> userQueryWrapper = new QueryWrapper&lt;&gt;();
-    //添加条件查询
-    userQueryWrapper.last("limit " + size);
-    List<Users> users = userMapper.selectList(userQueryWrapper);
-    ...
+@GetMapping("/safe/groupBy")
+public List<Users> queryGroupBySafe(@RequestParam("column") String column) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    if (column.equals("user")){
+        wrapper.select().groupBy(column);
+    } else if (column.equals("pass")) {
+        wrapper.select().groupBy(column);
+    }else {
+        wrapper.select().groupBy("id");
+    }
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
+                       href="/SQLI/MyBatisPlus/safe/insql?column=user&id=2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - exists/notExists 中内容不可控</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - insql/notinsql 中内容不可控</span></h5>
                     <label for="code5"></label><textarea class="form-control" id="code14">
-// exists/notExists都是直接将内容拼接至SQL语句中
-// 所以防止SQL注入应保证exists/notExists中内容客户端不可控
-// 或者将传入的内容的类型固定为非字符串的形式
+// 由于无法使用预编译，所以需要对客户端传入的值做控制
+// 可以值强制控制，也可以是类型控制
 
-@RequestMapping("/existsSec")
-@ResponseBody
-public void test(@RequestParam(name = "size", defaultValue = "0") Integer size){
-    //创建条件查询器
-    QueryWrapper<Users> userQueryWrapper = new QueryWrapper&lt;&gt;();
-    //添加条件查询
-    userQueryWrapper.last("limit " + size);
-    List<Users> users = userMapper.selectList(userQueryWrapper);
-    ...
+@GetMapping("/safe/insql")
+public List<Users> queryInsqlSafe(@RequestParam("column") String column,@RequestParam("id") Integer id) {
+    QueryWrapper<Users> wrapper = new QueryWrapper&lt;&gt;();
+    if (column.equals("pass")){
+        wrapper.select().inSql(column,"select pass from users where id >" + id);
+    }else {
+        wrapper.select().inSql("user","select user from users where id >" + id);
+    }
+    return userMapper.selectList(wrapper);
 }
                     </textarea><br><br>
                 </div>
